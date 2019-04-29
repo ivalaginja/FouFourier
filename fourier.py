@@ -26,7 +26,7 @@ def ft1d_freq(x):
     return s
 
 
-def rect(x, ampl, tint):
+def rect1d(x, ampl, tint):
     """Create the rectangle function with amplitude ample and an interval tint from -tint/2 to tint/2."""
     
     if tint/2 >= np.max(x):
@@ -39,6 +39,12 @@ def rect(x, ampl, tint):
     func[rightzero] = 0
     
     return func
+
+
+def rect2d(size):
+    """Rectangluar aperture. size is a tupel (x,y)."""
+    rect = (np.abs(xx) <= (size[0]/2)) * (np.abs(yy) <= (size[1]/2))
+    return rect.astype('float')
 
 
 def triangle(x, ampl, tint):
@@ -99,24 +105,25 @@ def displC(c,trim=0):
     plt.show()
 
 
-def padcplx(c,pad=5):
-    # padcplx - puts a Complex array in the centre of a zero-filled Complex array
-    #           pad defines the padding multiplier for the output array
+def padcplx(c, pad=5):
+    """Puts a Complex array in the centre of a zero-filled Complex array.
+    pad defines the padding multiplier for the output array."""
     (nx, ny) = c.shape
-    bignx = nx*pad + 1
-    bigny = ny*pad + 1
-    big_c = np.zeros((bignx,bigny),dtype=complex)
+    bignx = nx * pad + 1
+    bigny = ny * pad + 1
+    big_c = np.zeros((bignx, bigny),dtype=complex)
     
-    dx = (nx * (pad-1)) / 2 + 1
-    dy = (ny * (pad-1)) / 2 + 1
+    dx = int((nx * (pad-1)) / 2 + 1)
+    dy = int((ny * (pad-1)) / 2 + 1)
     
     big_c[dx:dx+nx,dy:dy+ny] = c
     return(big_c)
 
 
 def circle_mask(im, xc, yc, rcirc):
+    """Create a circular aperture centered on (xc, yc) with radius rcirc."""
     x, y = np.shape(im)
-    newy, newx = np.mgrid[0:y,0:x]
+    newy, newx = np.mgrid[:y,:x]
     circ = (newx-xc)**2 + (newy-yc)**2 < rcirc**2
     return circ
 
