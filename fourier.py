@@ -42,7 +42,7 @@ def rect1d(x, ampl, tint):
 
 
 def rect2d(size):
-    """Rectangluar aperture. size is a tupel (x,y)."""
+    """Rectangluar aperture. size is a tuple (x,y)."""
     rect = (np.abs(xx) <= (size[0]/2)) * (np.abs(yy) <= (size[1]/2))
     return rect.astype('float')
 
@@ -64,6 +64,26 @@ def triangle(x, ampl, tint):
 def gaussian(x, ampl, c):
     """Calculate a simple Gaussian with amplitude ampl and FWHM c."""
     func = ampl * np.exp(-np.pi * np.square(x) / (2 * c/2))
+    return func
+
+
+def gaussian2d(x, y, ampl, c):
+    """Calculate a simple 2D Gaussian with amplitude ampl and FWHM c."""
+    #func = ampl * np.exp(-np.square(x) / (2*np.square(c)))
+    func = ampl * np.exp(-np.pi * (np.square(x) + np.square(y)) / (2 * c/2))
+    return func
+
+
+def sinusoid1d(x, nu, phi, ampl):
+    func = A * np.cos(2*np.pi * nu * x - phi)
+    return func
+
+
+def sinusoid2d(x, y, nu, phi, A, theta=0):
+    xr = x * np.cos(theta)
+    yr = y * np.sin(theta)
+    
+    func = A * np.cos(2 * np.pi * nu * (xr+yr) - phi)
     return func
 
 
