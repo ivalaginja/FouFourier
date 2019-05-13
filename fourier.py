@@ -41,12 +41,6 @@ def rect1d(x, ampl, tint):
     return func
 
 
-def rect2d(size):
-    """Rectangluar aperture. size is a tuple (x,y)."""
-    rect = (np.abs(xx) <= (size[0]/2)) * (np.abs(yy) <= (size[1]/2))
-    return rect.astype('float')
-
-
 def triangle(x, ampl, tint):
     """Create the triangle function with amplitude ampl on interval tint from -tint/2 to tint/2."""
     pt = np.pi / tint
@@ -67,6 +61,36 @@ def gaussian(x, ampl, c):
     return func
 
 
+def sinusoid1d(x, nu, phi, ampl):
+    func = A * np.cos(2*np.pi * nu * x - phi)
+    return func
+
+
+# From notebook 5
+
+
+def ft2d(func):
+    ft = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(func)))
+    return ft
+
+
+def ift2d(func):
+    ift = np.fft.fftshift(np.fft.ifft2(np.fft.ifftshift(func)))
+    return ift
+
+
+def rect2d_noshift(size):
+    """Rectangluar aperture. size is a tuple (x,y)."""
+    rect = (np.abs(xx) <= (size[0]/2)) * (np.abs(yy) <= (size[1]/2))
+    return rect.astype('float')
+
+
+def rect2d(size):
+    """Rectangluar aperture. size is a tuple (x,y)."""
+    rect = (np.abs(xx) <= (size[0]/2)) * (np.abs(yy) <= (size[1]/2))
+    return rect.astype('float')
+
+
 def gaussian2d(x, y, ampl, c):
     """Calculate a simple 2D Gaussian with amplitude ampl and FWHM c."""
     #func = ampl * np.exp(-np.square(x) / (2*np.square(c)))
@@ -74,8 +98,8 @@ def gaussian2d(x, y, ampl, c):
     return func
 
 
-def sinusoid1d(x, nu, phi, ampl):
-    func = A * np.cos(2*np.pi * nu * x - phi)
+def sinusoid2d_norot(x, y, nu, phi, A):
+    func = A * np.cos(2 * np.pi * nu * (x+y) - phi)
     return func
 
 
@@ -85,10 +109,6 @@ def sinusoid2d(x, y, nu, phi, A, theta=0):
     
     func = A * np.cos(2 * np.pi * nu * (xr+yr) - phi)
     return func
-
-
-
-
 
 
 # From Leiden HCI class
@@ -145,7 +165,7 @@ def circle_mask(im, xc, yc, rcirc):
     x, y = np.shape(im)
     newy, newx = np.mgrid[:y,:x]
     circ = (newx-xc)**2 + (newy-yc)**2 < rcirc**2
-    return circ
+    return circ.astype('float')
 
 
 def zoom(im,x,y,bb):
